@@ -15,9 +15,10 @@ class App extends Component {
       //  <InvoiceForm/>
         <BrowserRouter>
         <Routes>
-        <Route exact path="/" element={<InvoiceForm/>}/> 
-        <Route exact path="/Final" element={<Final/>}/> 
-          <Route exact path="/Login" element={<Login/>}/> 
+        <Route exact path="/" element={<Login/>}/> 
+        <Route exact path="/final" element={<Final/>}/> 
+        <Route  path="/invoiceform" element={<InvoiceForm/>}/>
+           
         </Routes>
         </BrowserRouter>
    
