@@ -1,117 +1,63 @@
-import React, { useState } from 'react'
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-// import SIgn_img from './SIgn_img'
-import { useNavigate } from 'react-router-dom'
-
-// import { ToastContainer, toast } from 'react-toastify';
-// import 'react-toastify/dist/ReactToastify.css';
-
-const Login = () => {
-
-    const history = useNavigate();
-
-    const [inpval, setInpval] = useState({
-        email: "",
-        password: ""
-    })
-
-    // const [data, setData] = useState([]);
-    // console.log(inpval);
-
-    const getdata = (e) => {
-        // console.log(e.target.value);
+import React, { useState} from 'react'
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import {useNavigate} from 'react-router-dom'
+import axios from 'axios';
+import Navbar from 'react-bootstrap/Navbar'
+import Container from 'react-bootstrap/Container'
+import { NavLink } from 'react-router-dom'
 
 
-        const { value, name } = e.target;
-        // console.log(value,name);
 
+function AddUserAPI() {
+  let navigate = useNavigate()
+ 
+  let [email,setEmail] = useState("")
+  
+  let [password,setpassword] = useState("")
 
-        setInpval(() => {
-            return {
-                ...inpval,
-                [name]: value
-            }
-        })
-
+  let handleSubmit = async()=>{
+    let data = {
+        email,
+        password
     }
-
-    const addData = (e) => {
-        e.preventDefault();
-
-        const getuserArr = localStorage.getItem("useryoutube");
-        console.log(getuserArr);
-
-        const { email, password } = inpval;
-        if (email === "") {
-            alert('email field is requred', {
-                position: "top-center",
-            });
-        } else if (!email.includes("@")) {
-            alert('plz enter valid email addres', {
-                position: "top-center",
-            });
-        } else if (password === "") {
-            alert('password field is requred', {
-                position: "top-center",
-            });
-        } else if (password.length < 5) {
-            alert('password length greater five', {
-                position: "top-center",
-            });
-        } else {
-
-            if (getuserArr && getuserArr.length) {
-                const userdata = JSON.parse(getuserArr);
-                const userlogin = userdata.filter((el, k) => {
-                    return el.email === email && el.password === password
-                });
-
-                if (userlogin.length === 0) {
-                    alert("invalid details")
-                } else {
-                    console.log("user login succesfully");
-
-                    localStorage.setItem("user_login", JSON.stringify(userlogin))
-
-                    history("/details")
-                    window.location.assign("/src/")
-                }
+   
+        try {
+            let res = await axios.post('https://6380fd1e8efcfcedac14e348.mockapi.io/reactapp',data)
+            if(res.status===201)
+            {
+                alert("Regisertation Successfull Please Login On next Page")
+                navigate('/Final')
             }
+        } catch (error) {
+            console.log(error)
         }
+  
+}
+  return <div className='container-fluid'>
 
-    }
-
-    return (
-        <>
-        
-            <div className="container mt-3">
-                <section className='d-flex justify-content-between'>
-                    <div className="left_data mt-3 p-3" style={{ width: "100%" }}>
-                        <h3 className='text-center col-lg-6'>Sign Up</h3>
-                        <Form >
-
-                            <Form.Group className="mb-3 col-lg-6" controlId="formBasicEmail">
-
-                                <Form.Control type="email" name='email' onChange={getdata} placeholder="Enter email" />
-                            </Form.Group>
-
-                            <Form.Group className="mb-3 col-lg-6" controlId="formBasicPassword">
-
-                                <Form.Control type="password" name='password' onChange={getdata} placeholder="Password" />
-                            </Form.Group>
-                            <Button variant="primary" className='col-lg-6' onClick={addData} style={{ background: "rgb(67, 185, 127)" }} type="submit">
-                                Submit
-                            </Button>
-                        </Form>
-                        <p className='mt-3'>Already Have an Account? <span>Signin</span> </p>
-                    </div>
-                
-                </section>
-              
-            </div>
-        </>
-    )
+<Navbar bg="dark" variant="dark">
+                <Container>
+                    <NavLink to="/" className="text-decoration-none text-light mx-2">User Registration</NavLink>
+                   
+                </Container>
+            </Navbar>
+      
+      <Form>
+       <Form.Group className="mb-3" >
+        <Form.Label>Email address</Form.Label>
+        <Form.Control type="email" value={email} placeholder="Enter email"  onChange={(e)=>setEmail(e.target.value)}/>
+      </Form.Group>
+    
+      <Form.Group className="mb-3" >
+        <Form.Label>Password</Form.Label>
+        <Form.Control type="password" value={password} placeholder="Enter password"  onChange={(e)=>setpassword(e.target.value)}/>
+      </Form.Group>
+      <Button variant="primary" onClick={()=>handleSubmit()}>
+        Submit
+      </Button>
+    </Form>
+    </div>
 }
 
-export default Login
+export default AddUserAPI
